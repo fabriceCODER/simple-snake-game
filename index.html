@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snake Game</title>
+    <style>
+        #game-board {
+            width: 400px;
+            height: 400px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-board"></div>
+    <script>
+        // Get a reference to the game board element
+        const gameBoard = document.getElementById("game-board");
+
+        // Set the width and height of each cell in the game board
+        const cellSize = 20;
+
+        // Calculate the number of cells in each dimension
+        const boardSize = gameBoard.offsetWidth / cellSize;
+        const numRows = Math.floor(gameBoard.offsetHeight / cellSize);
+
+        // Initialize the game state
+        let snake = [{ x: 0, y: 0 }];
+        let direction = "right";
+
+        // Function to draw the snake on the game board
+        function drawSnake() {
+            // Clear the game board
+            gameBoard.innerHTML = "";
+
+            // Draw each segment of the snake
+            snake.forEach(segment => {
+                const snakeSegment = document.createElement("div");
+                snakeSegment.style.width = cellSize + "px";
+                snakeSegment.style.height = cellSize + "px";
+                snakeSegment.style.position = "absolute";
+                snakeSegment.style.left = segment.x * cellSize + "px";
+                snakeSegment.style.top = segment.y * cellSize + "px";
+                snakeSegment.style.backgroundColor = "green";
+                gameBoard.appendChild(snakeSegment);
+            });
+        }
+
+        // Function to update the game state
+        function update() {
+            // Move the snake in the current direction
+            const head = { ...snake[0] };
+
+            switch (direction) {
+                case "up":
+                    head.y--;
+                    break;
+                case "down":
+                    head.y++;
+                    break;
+                case "left":
+                    head.x--;
+                    break;
+                case "right":
+                    head.x++;
+                    break;
+            }
+
+            // Add the new head to the beginning of the snake
+            snake.unshift(head);
+
+            // Remove the tail segment if the snake hasn't eaten
+            if (snake.length > 1) {
+                snake.pop();
+            }
+
+            // Draw the snake on the game board
+            drawSnake();
+        }
+
+        // Function to handle keydown events
+        function handleKeyDown(event) {
+            // Change the direction of the snake based on the key pressed
+            switch (event.key) {
+                case "ArrowUp":
+                    direction = "up";
+                    break;
+                case "ArrowDown":
+                    direction = "down";
+                    break;
+                case "ArrowLeft":
+                    direction = "left";
+                    break;
+                case "ArrowRight":
+                    direction = "right";
+                    break;
+            }
+        }
+
+        // Set up event listener for keydown events
+        document.addEventListener("keydown", handleKeyDown);
+
+        // Start the game loop
+        setInterval(update, 200);
+    </script>
+</body>
+</html>
